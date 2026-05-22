@@ -111,8 +111,8 @@ class Game {
     const aspect = 16 / 9;
     let w = maxW, h = w / aspect;
     if (h > maxH) { h = maxH; w = h * aspect; }
-    w = Math.floor(w);
-    h = Math.floor(h);
+    w = Math.min(960, Math.floor(w));
+    h = Math.min(540, Math.floor(h));
     this.canvas.width = w;
     this.canvas.height = h;
     this.overlay.width = w;

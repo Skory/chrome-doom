@@ -47,6 +47,13 @@ try {
   await page.waitForSelector('#hud:not(.hidden)');
   const health0 = parseInt(await page.$eval('#hud-health', el => el.textContent), 10);
   assert(health0 > 0 && health0 <= 100, 'HUD health displayed');
+  const avgFrameMs = await page.evaluate(() => {
+    const g = window.__game;
+    const t0 = performance.now();
+    for (let i = 0; i < 20; i++) g._render();
+    return (performance.now() - t0) / 20;
+  });
+  assert(avgFrameMs < 28, `browser render avg ${avgFrameMs.toFixed(1)}ms (<28ms for 35+ FPS)`);
   await page.keyboard.down('KeyW');
   await new Promise(r => setTimeout(r, 500));
   await page.keyboard.up('KeyW');

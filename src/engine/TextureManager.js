@@ -216,11 +216,19 @@ function createSpriteSheet(drawFn, frames, size = 128) {
   return { canvas: c, frameW: size, frames: frames.length };
 }
 
+function cachePixels(canvas) {
+  const d = canvas.getContext('2d').getImageData(0, 0, TEX_SIZE, TEX_SIZE).data;
+  return d;
+}
+
 export class TextureManager {
   constructor() {
     this.walls = [];
+    this.wallPx = [];
     this.floors = [];
+    this.floorPx = [];
     this.ceilings = [];
+    this.ceilPx = [];
     this.sprites = {};
     this.weapon = null;
     this._init();
@@ -265,6 +273,13 @@ export class TextureManager {
     this.sprites.lamp = this._createLampSprite();
 
     this.weapon = this._createWeaponSprite();
+
+    for (let i = 0; i < this.walls.length; i++)
+      if (this.walls[i]) this.wallPx[i] = cachePixels(this.walls[i]);
+    for (let i = 0; i < this.floors.length; i++)
+      if (this.floors[i]) this.floorPx[i] = cachePixels(this.floors[i]);
+    for (let i = 0; i < this.ceilings.length; i++)
+      if (this.ceilings[i]) this.ceilPx[i] = cachePixels(this.ceilings[i]);
   }
 
   _createLampSprite() {
@@ -299,31 +314,26 @@ export class TextureManager {
     return c;
   }
 
-  /** Sample wall texture with nearest-neighbor */
+  _samplePx(px, u, v) {
+    const x = (clamp(u, 0, 0.999) * (TEX_SIZE - 1)) | 0;
+    const y = (clamp(v, 0, 0.999) * (TEX_SIZE - 1)) | 0;
+    const i = (y * TEX_SIZE + x) << 2;
+    return [px[i], px[i + 1], px[i + 2]];
+  }
+
   sampleWall(texId, u, v) {
-    const tex = this.walls[texId];
-    if (!tex) return [40, 40, 50];
-    const x = Math.floor(clamp(u, 0, 0.999) * (TEX_SIZE - 1));
-    const y = Math.floor(clamp(v, 0, 0.999) * (TEX_SIZE - 1));
-    const ctx = tex.getContext('2d');
-    const d = ctx.getImageData(x, y, 1, 1).data;
-    return [d[0], d[1], d[2]];
+    const px = this.wallPx[texId];
+    return px ? this._samplePx(px, u, v) : [40, 40, 50];
   }
 
   sampleFloor(texId, u, v) {
-    const tex = this.floors[texId] || this.floors[1];
-    const x = Math.floor(clamp(u % 1, 0, 0.999) * (TEX_SIZE - 1));
-    const y = Math.floor(clamp(v % 1, 0, 0.999) * (TEX_SIZE - 1));
-    const d = tex.getContext('2d').getImageData(x, y, 1, 1).data;
-    return [d[0], d[1], d[2]];
+    const px = this.floorPx[texId] || this.floorPx[1];
+    return px ? this._samplePx(px, u % 1, v % 1) : [40, 40, 40];
   }
 
   sampleCeiling(texId, u, v) {
-    const tex = this.ceilings[texId] || this.ceilings[1];
-    const x = Math.floor(clamp(u % 1, 0, 0.999) * (TEX_SIZE - 1));
-    const y = Math.floor(clamp(v % 1, 0, 0.999) * (TEX_SIZE - 1));
-    const d = tex.getContext('2d').getImageData(x, y, 1, 1).data;
-    return [d[0], d[1], d[2]];
+    const px = this.ceilPx[texId] || this.ceilPx[1];
+    return px ? this._samplePx(px, u % 1, v % 1) : [30, 30, 40];
   }
 }
 

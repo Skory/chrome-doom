@@ -56,9 +56,9 @@ export class Enemy {
     if (d <= this.range && this.attackCooldown <= 0) {
       this.state = 'attack';
       this.attackCooldown = 1 / this.attackRate;
-      if (this.type === 'imp' && d > 2) {
-        // Ranged — damage if line roughly clear
-        if (!map.isSolid((this.x + player.x) / 2, (this.y + player.y) / 2, 0.1)) {
+      if (this.type === 'imp') {
+        const midX = (this.x + player.x) / 2, midY = (this.y + player.y) / 2;
+        if (!map.isSolid(midX, midY, 0.12)) {
           player.takeDamage(this.damage);
           audio?.playEnemyAttack('imp');
         }

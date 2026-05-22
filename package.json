@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npx --yes serve . -p 5173",
     "start": "npm run dev",
-    "test": "node tests/game.test.js && node tests/jump.test.js && node tests/browser.test.js",
+    "test": "node tests/game.test.js && node tests/jump.test.js && node tests/imp-melee.test.js && node tests/perf.test.js && node tests/browser.test.js",
     "postinstall": "node -e \"try{require('puppeteer')}catch(e){console.warn('Run npm install for browser tests')}\"",
     "capture": "node scripts/capture.js",
     "deploy:netlify": "npx netlify-cli deploy --dir=. --prod --allow-anonymous",
