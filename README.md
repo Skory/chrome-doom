@@ -6,7 +6,9 @@ Premium browser Doom-style raycaster FPS — Episode 1 Hangar (E1M1-inspired).
 
 **Local:** `npm run dev` → http://localhost:5173
 
-**Live demo:** http://brilliant-bienenstitch-868d74.netlify.app
+**Live demo:** https://skory.github.io/chrome-doom/
+
+Alternate: http://brilliant-bienenstitch-868d74.netlify.app (password: `My-Drop-Site`)
 
 ## Controls
 
