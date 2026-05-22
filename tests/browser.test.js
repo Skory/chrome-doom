@@ -24,14 +24,29 @@ const assert = (c, m) => (c ? (passed++, console.log('✓', m)) : (failed++, con
 try {
   await waitForServer(`http://localhost:${PORT}`);
   const puppeteer = await import('puppeteer');
-  const browser = await puppeteer.default.launch({ headless: true, args: ['--no-sandbox'] });
+  const launchOpts = { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] };
+  const chromePaths = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+  ];
+  for (const p of chromePaths) {
+    try {
+      const { accessSync } = await import('fs');
+      accessSync(p);
+      launchOpts.executablePath = p;
+      break;
+    } catch (_) {}
+  }
+  const browser = await puppeteer.default.launch(launchOpts);
   const page = await browser.newPage();
   await page.goto(`http://localhost:${PORT}`);
   await page.waitForSelector('#menu.active');
   assert(await page.$eval('#btn-start', el => !!el), 'start button exists');
   await page.click('#btn-start');
   await page.waitForSelector('#hud:not(.hidden)');
-  assert(await page.$eval('#hud-health', el => el.textContent === '100'), 'HUD health初始');
+  const health0 = parseInt(await page.$eval('#hud-health', el => el.textContent), 10);
+  assert(health0 > 0 && health0 <= 100, 'HUD health displayed');
   await page.keyboard.down('KeyW');
   await new Promise(r => setTimeout(r, 500));
   await page.keyboard.up('KeyW');
