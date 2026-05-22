@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHROME DOOM</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Standalone entry: same as index.html, works on any static host -->
+  <script>if(location.pathname.endsWith('play.html'))history.replaceState({},'','./');</script>
+  <iframe src="index.html" style="position:fixed;inset:0;width:100%;height:100%;border:0" allow="fullscreen"></iframe>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "chrome-doom",
+  "version": "1.0.0",
+  "description": "Premium browser Doom-style raycaster FPS",
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes serve . -p 5173",
+    "start": "npm run dev",
+    "test": "node tests/game.test.js && node tests/browser.test.js",
+    "capture": "node scripts/capture.js",
+    "deploy:netlify": "npx netlify-cli deploy --dir=. --prod --allow-anonymous",
+    "deploy:pages": "node scripts/prepare-pages.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.0.0"
+  },
+  "keywords": ["doom", "raycaster", "fps", "game"],
+  "license": "MIT"
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>CHROME DOOM — Hangar</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" width="1280" height="720"></canvas>
+    <canvas id="overlay" width="1280" height="720"></canvas>
+    <div id="touch-controls" class="hidden">
+      <div id="stick-move" class="stick-zone"><div class="stick-knob"></div></div>
+      <div id="stick-look" class="stick-zone"><div class="stick-knob"></div></div>
+      <button id="btn-fire" type="button">FIRE</button>
+    </div>
+    <div id="menu" class="panel active">
+      <div class="menu-bg"></div>
+      <div class="menu-content">
+        <h1 class="logo">CHROME<span>DOOM</span></h1>
+        <p class="subtitle">Episode 1 — Hangar (E1M1)</p>
+        <p class="tagline">Premium browser raycaster · 60 FPS · Web Audio</p>
+        <button id="btn-start" type="button" class="menu-btn primary">ENTER HANGAR</button>
+        <div class="menu-options">
+          <label><input type="checkbox" id="opt-crt" checked /> CRT scanlines</label>
+          <label><input type="checkbox" id="opt-bloom" checked /> Light bloom</label>
+          <label><input type="checkbox" id="opt-vignette" checked /> Vignette</label>
+        </div>
+        <p class="controls-hint">WASD move · Mouse look · Click to shoot · M minimap · F fullscreen · Esc menu</p>
+      </div>
+    </div>
+    <div id="hud" class="hidden">
+      <div class="hud-bar">
+        <div class="stat health"><span>HEALTH</span><strong id="hud-health">100</strong></div>
+        <div class="stat armor"><span>ARMOR</span><strong id="hud-armor">0</strong></div>
+        <div class="stat ammo"><span>AMMO</span><strong id="hud-ammo">50</strong></div>
+        <div class="stat kills"><span>KILLS</span><strong id="hud-kills">0</strong></div>
+      </div>
+      <canvas id="minimap" width="200" height="200"></canvas>
+      <div id="weapon-sprite"></div>
+      <div id="crosshair"></div>
+      <div id="message" class="hidden"></div>
+    </div>
+    <div id="game-over" class="panel hidden">
+      <h2 id="end-title">YOU DIED</h2>
+      <p id="end-stats"></p>
+      <button id="btn-retry" type="button" class="menu-btn">TRY AGAIN</button>
+      <button id="btn-menu" type="button" class="menu-btn secondary">MAIN MENU</button>
+    </div>
+    <button id="btn-fullscreen" type="button" title="Fullscreen (F)">⛶</button>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
