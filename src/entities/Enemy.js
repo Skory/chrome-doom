@@ -77,11 +77,7 @@ export class Enemy {
       const my = Math.sin(ang) * this.speed * dt;
       const nx = this.x + mx, ny = this.y + my;
       if (!map.isSolid(nx, this.y, this.radius)) this.x = nx;
-      if (!map.isSolid(this.x, ny, this.radius)) this.y = ny;
-      if (!map.isSolid(nx, ny, this.radius)) {
-        this.x = nx;
-        this.y = ny;
-      }
+      else if (!map.isSolid(this.x, ny, this.radius)) this.y = ny;
     } else {
       this.state = 'idle';
     }

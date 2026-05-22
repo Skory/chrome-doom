@@ -6,14 +6,21 @@
   "scripts": {
     "dev": "npx --yes serve . -p 5173",
     "start": "npm run dev",
-    "test": "node tests/game.test.js && node tests/browser.test.js",
+    "test": "node tests/game.test.js && node tests/jump.test.js && node tests/browser.test.js",
+    "postinstall": "node -e \"try{require('puppeteer')}catch(e){console.warn('Run npm install for browser tests')}\"",
     "capture": "node scripts/capture.js",
     "deploy:netlify": "npx netlify-cli deploy --dir=. --prod --allow-anonymous",
     "deploy:pages": "node scripts/prepare-pages.js"
   },
   "devDependencies": {
+    "canvas": "^3.2.3",
     "puppeteer": "^24.0.0"
   },
-  "keywords": ["doom", "raycaster", "fps", "game"],
+  "keywords": [
+    "doom",
+    "raycaster",
+    "fps",
+    "game"
+  ],
   "license": "MIT"
 }

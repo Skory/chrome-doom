@@ -16,6 +16,7 @@ export class Player {
     this.radius = 0.28;
     this.crouching = false;
     this.onGround = true;
+    this.z = 0;
     this.vz = 0;
     this.height = 1.6;
     this.weaponBob = 0;
@@ -69,12 +70,17 @@ export class Player {
     this._moveAxis(0, this.vy * dt, map);
 
     if (input.jump && this.onGround) {
-      this.vz = 4.5;
+      this.vz = 5;
       this.onGround = false;
     }
     if (!this.onGround) {
-      this.vz -= 12 * dt;
-      if (this.vz < 0 && this.onGround) this.vz = 0;
+      this.z += this.vz * dt;
+      this.vz -= 14 * dt;
+      if (this.z <= 0) {
+        this.z = 0;
+        this.vz = 0;
+        this.onGround = true;
+      }
     }
     this.crouching = input.crouch;
     this.height = this.crouching ? 1.0 : 1.6;

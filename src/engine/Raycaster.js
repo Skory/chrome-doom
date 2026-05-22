@@ -35,10 +35,8 @@ export class Raycaster {
 
   render(player, map, lights) {
     const { x: px, y: py, angle: pa, pitch } = player;
-    const cosP = Math.cos(pitch || 0);
-    const sinP = Math.sin(pitch || 0);
-    const planeDist = (this.w / 2) / Math.tan(this.fov / 2);
-    const pitchOff = Math.floor(pitch * this.h * 0.5);
+    const viewPitch = (pitch || 0) + (player.z || 0) * 0.12;
+    const pitchOff = Math.floor(viewPitch * this.h * 0.5);
 
     // Clear to ceiling/floor base via per-column render
     const cells = map.cells;

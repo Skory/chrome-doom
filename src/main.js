@@ -285,4 +285,5 @@ class Game {
   }
 }
 
-new Game();
+const game = new Game();
+window.__game = game;

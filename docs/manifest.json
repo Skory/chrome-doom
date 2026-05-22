@@ -4,9 +4,11 @@
     "docs/screenshots/02-in-game.png",
     "docs/screenshots/03-minimap.png",
     "docs/screenshots/04-combat-action.png",
-    "docs/screenshots/05-end-state.png",
-    "docs/screenshots/06-enemy-sprites-ingame.png"
+    "docs/screenshots/05-end-state-win.png",
+    "docs/screenshots/05-end-state-death.png",
+    "docs/screenshots/06-enemy-sprites-ingame.png",
+    "docs/screenshots/07-enemy-sprites.png"
   ],
   "video": "docs/video/gameplay.mp4",
-  "capturedAt": "2026-05-22T19:42:55.374Z"
+  "capturedAt": "2026-05-22T20:00:58.319Z"
 }

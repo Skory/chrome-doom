@@ -35,6 +35,10 @@ export function rayWallIntersect(ox, oy, dx, dy, map, maxDist = 64) {
     const my = Math.floor(y);
     if (mx < 0 || my < 0 || mx >= map.width || my >= map.height) return { hit: true, dist: d, x, y, mx, my, side: 0 };
     const cell = map.cells[my * map.width + mx];
+    if (cell === 9) {
+      const door = map.doors?.get(`${mx},${my}`);
+      if (!door || door.open < 0.85) return { hit: true, dist: d, x, y, mx, my, side: Math.abs(x - mx - 0.5) > Math.abs(y - my - 0.5) ? 0 : 1 };
+    }
     if (cell > 0 && cell !== 9) return { hit: true, dist: d, x, y, mx, my, side: Math.abs(x - mx - 0.5) > Math.abs(y - my - 0.5) ? 0 : 1 };
   }
   return { hit: false, dist: maxDist };

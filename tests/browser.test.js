@@ -55,9 +55,10 @@ try {
   await new Promise(r => setTimeout(r, 300));
   const ammo = await page.$eval('#hud-ammo', el => parseInt(el.textContent, 10));
   assert(ammo < 50, 'shooting reduces ammo');
+  const mmBefore = await page.$eval('#minimap', el => el.classList.contains('hidden-map'));
   await page.keyboard.press('KeyM');
-  const mmVisible = await page.$eval('#minimap', el => !el.classList.contains('hidden-map'));
-  assert(mmVisible !== undefined, 'minimap toggles');
+  const mmAfter = await page.$eval('#minimap', el => el.classList.contains('hidden-map'));
+  assert(mmBefore !== mmAfter, 'minimap toggles on M key');
   await browser.close();
 } finally {
   server.kill();

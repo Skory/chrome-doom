@@ -35,10 +35,11 @@ async function main() {
   try {
     await waitForServer(`http://localhost:${PORT}`);
     const puppeteer = await import('puppeteer');
-    const browser = await puppeteer.default.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
+    const launchOpts = { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] };
+    for (const p of ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome']) {
+      try { const { accessSync } = await import('fs'); accessSync(p); launchOpts.executablePath = p; break; } catch (_) {}
+    }
+    const browser = await puppeteer.default.launch(launchOpts);
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 2 });
 
@@ -100,31 +101,30 @@ async function main() {
       }
     };
     await actions();
-    await page.screenshot({ path: join(outDir, '05-end-state.png') });
-
-    // Sprite sheet from procedural textures in page
-    await page.evaluate(async () => {
-      const { TextureManager } = await import('./src/engine/TextureManager.js');
-      const tm = new TextureManager();
-      const c = document.createElement('canvas');
-      c.width = 520; c.height = 140;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#1a1a22';
-      ctx.fillRect(0, 0, 520, 140);
-      ctx.drawImage(tm.sprites.imp.canvas, 10, 10, 250, 64);
-      ctx.drawImage(tm.sprites.demon.canvas, 270, 10, 250, 64);
-      ctx.fillStyle = '#aaa';
-      ctx.font = '12px monospace';
-      ctx.fillText('IMP (5 frames)', 10, 120);
-      ctx.fillText('DEMON (5 frames)', 270, 120);
-      const a = document.createElement('a');
-      a.download = 'sprites.png';
-      // store on window
-      window.__spriteData = c.toDataURL('image/png');
-    });
-
-    // Simpler: screenshot enemy in game
     await page.screenshot({ path: join(outDir, '06-enemy-sprites-ingame.png') });
+
+    // Win screen — kill all enemies via console then reach exit
+    await page.evaluate(() => {
+      const g = window.__game;
+      if (g) {
+        g.enemies.forEach(e => { e.alive = false; e.dead = true; e.health = 0; });
+        g.player.kills = g.totalEnemies;
+        g._endGame(true);
+      }
+    });
+    await new Promise(r => setTimeout(r, 600));
+    await page.screenshot({ path: join(outDir, '05-end-state-win.png') });
+
+    await page.click('#btn-menu').catch(() => {});
+    await new Promise(r => setTimeout(r, 400));
+    await page.click('#btn-start').catch(() => {});
+    await new Promise(r => setTimeout(r, 500));
+    await page.evaluate(() => {
+      const g = window.__game;
+      if (g) { g.player.health = 0; g._endGame(false); }
+    });
+    await new Promise(r => setTimeout(r, 400));
+    await page.screenshot({ path: join(outDir, '05-end-state-death.png') });
 
     await browser.close();
 
@@ -148,8 +148,10 @@ async function main() {
         'docs/screenshots/02-in-game.png',
         'docs/screenshots/03-minimap.png',
         'docs/screenshots/04-combat-action.png',
-        'docs/screenshots/05-end-state.png',
+        'docs/screenshots/05-end-state-win.png',
+        'docs/screenshots/05-end-state-death.png',
         'docs/screenshots/06-enemy-sprites-ingame.png',
+        'docs/screenshots/07-enemy-sprites.png',
       ],
       video: 'docs/video/gameplay.mp4',
       capturedAt: new Date().toISOString(),
